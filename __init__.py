@@ -22,7 +22,7 @@ from path_helpers import path
 from flatland import Form, String
 from microdrop.plugin_helpers import AppDataController, get_plugin_info
 from microdrop.plugin_manager import (PluginGlobals, Plugin, IPlugin,
-                                      implements)
+                                      ScheduleRequest, implements)
 from microdrop.app_context import get_app
 import gtk
 
@@ -49,17 +49,52 @@ class MetadataPlugin(Plugin, AppDataController):
         self.meta_data_menu = None
 
     def create_ui(self):
-        self.meta_data_menu = gtk.MenuItem("DMF control board")
+        self.meta_data_menu = gtk.MenuItem('Edit experiment metadata')
         self.meta_data_menu.connect('activate', self.on_meta_data_menu__activate)
+        self.meta_data_menu.show()
         app = get_app()
+        if not hasattr(app, 'experiment_log') or app.experiment_log is None:
+            self.meta_data_menu.set_sensitive(False)
         app.main_window_controller.menu_tools.append(self.meta_data_menu)
 
     def destroy_ui(self):
         app = get_app()
         app.main_window_controller.menu_tools.remove(self.meta_data_menu)
 
-    def on_meta_data_menu__activate(self, widget, data):
-        import pdb; pdb.set_trace()
+    ###########################################################################
+    # Mutator methods
+    def edit_metadata(self):
+        from pygtkhelpers.schema import schema_dialog
+
+        app = get_app()
+        if app.experiment_log is None:
+            return
+        metadata = app.experiment_log.data[0].get(self.name, {})
+        schema = {'type': 'object',
+                  'properties': {'device_id': {'type': 'string', 'default': '',
+                                               'index': 0},
+                                 'sample_id': {'type': 'string', 'default': '',
+                                               'index': 1}}}
+        try:
+            data = schema_dialog(schema, data=metadata, max_width=320,
+                                 max_fps=15, title='Edit metadata',
+                                 parent=app.main_window_controller.view)
+        except ValueError:
+            pass
+        except KeyError:
+            pass
+        else:
+            app.experiment_log.data[0][self.name] = dict(data.items())
+
+    ###########################################################################
+    # Callback methods
+    def on_experiment_log_changed(self, experiment_log):
+        self.meta_data_menu.set_sensitive(True)
+        experiment_log.add_data({}, self.name)
+        self.edit_metadata()
+
+    def on_meta_data_menu__activate(self, widget):
+        self.edit_metadata()
 
     def on_plugin_enable(self):
         self.create_ui()
@@ -67,8 +102,19 @@ class MetadataPlugin(Plugin, AppDataController):
     def on_plugin_disable(self):
         self.destroy_ui()
 
-    def on_experiment_log_changed(self, experiment_log):
-        experiment_log.add_data({}, self.name)
-        import pdb; pdb.set_trace()
+    ###########################################################################
+    # Accessor methods
+    def get_schedule_requests(self, function_name):
+        """
+        Returns a list of scheduling requests (i.e., ScheduleRequest
+        instances) for the function specified by function_name.
+        """
+        if function_name == 'on_experiment_log_changed':
+            # Ensure that the app's reference to the new experiment log gets
+            # set.
+            return [ScheduleRequest('microdrop.app', self.name)]
+        else:
+            return []
+
 
 PluginGlobals.pop_env()
