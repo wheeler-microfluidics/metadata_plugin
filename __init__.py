@@ -170,9 +170,9 @@ class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
         # Validate new metadata against schema.
         jsonschema.validate(data, self.schema)
         original_metadata = self.get_metadata()
-        app.experiment_log.data[0][self.name] = data
+        app.experiment_log.metadata[self.name] = data
         self.emit('metadata-changed', original_metadata,
-                  app.experiment_log.data[0][self.name])
+                  app.experiment_log.metadata[self.name])
 
     def set_video_config(self, config):
         '''
@@ -258,7 +258,7 @@ class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
         app = get_app()
         if app.experiment_log is None:
             return {}
-        return app.experiment_log.data[0].get(self.name, {}).copy()
+        return app.experiment_log.metadata.get(self.name, {}).copy()
 
     def get_schedule_requests(self, function_name):
         """
