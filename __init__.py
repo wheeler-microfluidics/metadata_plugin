@@ -74,10 +74,10 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
         self.menu = None
         self.video_config_menu = None
         self.metadata_menu = None
-        self.connect('metadata-changed', self.on_metadata_changed)
         self.connect('metadata-changed', lambda obj, original_metadata,
                      metadata: pm.emit_signal('on_metadata_changed',
-                                              original_metadata, metadata))
+                                              args=[original_metadata,
+                                                    metadata]))
 
     def create_ui(self):
         self.menu = gtk.Menu()
@@ -208,7 +208,7 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
     def on_metadata_menu__activate(self, widget):
         self.edit_metadata()
 
-    def on_metadata_changed(self, obj, original_metadata, metadata):
+    def on_metadata_changed(self, original_metadata, metadata):
         '''
         Update metadata label in GUI when metadata is changed.
         '''
