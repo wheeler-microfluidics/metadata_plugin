@@ -182,8 +182,6 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
 
             config (pandas.Series) : Video configuration (or `None`).
         '''
-        app = get_app()
-        app_values = self.get_app_values()
         config_json = (json.dumps(config) if config is None else
                        config.to_json())
         self.set_app_values({'video_config': config_json})
@@ -221,10 +219,10 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
                                 key=lambda (k, v): (v.get('index', -1), k))
         # Set metadata label content.
         label_metadata.set_markup(' ' + '\t'
-                                    .join(['<b>{}:</b> {}'
-                                            .format(k.replace('_', ' '),
-                                                    metadata[k])
-                                            for k, v in ordered_schema]))
+                                  .join(['<b>{}:</b> {}'
+                                         .format(k.replace('_', ' '),
+                                                 metadata[k])
+                                         for k, v in ordered_schema]))
 
     def on_plugin_enable(self):
         self.create_ui()
