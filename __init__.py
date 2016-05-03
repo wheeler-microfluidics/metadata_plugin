@@ -22,8 +22,6 @@ import logging
 from flatland import Form, String
 from microdrop.app_context import get_app
 from microdrop.plugin_helpers import AppDataController, get_plugin_info
-from microdrop.plugin_manager import (PluginGlobals, Plugin, IPlugin,
-                                      ScheduleRequest, implements)
 from noconflict import classmaker
 from path_helpers import path
 from pygtkhelpers.utils import gsignal
@@ -31,12 +29,13 @@ from redirect_io import nostderr
 import gobject
 import gtk
 import jsonschema
+import microdrop.plugin_manager as pm
 
-PluginGlobals.push_env('microdrop.managed')
+pm.PluginGlobals.push_env('microdrop.managed')
 
 logger = logging.getLogger(__name__)
 
-class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
+class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
     """
     This class is automatically registered with the PluginManager.
     """
@@ -45,7 +44,7 @@ class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
     #
     # [1]: http://code.activestate.com/recipes/204197-solving-the-metaclass-conflict/
     __metaclass__ = classmaker()
-    implements(IPlugin)
+    pm.implements(pm.IPlugin)
     gsignal('metadata-changed', object, object)
     version = get_plugin_info(path(__file__).parent).version
     plugin_name = get_plugin_info(path(__file__).parent).plugin_name
@@ -76,6 +75,9 @@ class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
         self.video_config_menu = None
         self.metadata_menu = None
         self.connect('metadata-changed', self.on_metadata_changed)
+        self.connect('metadata-changed', lambda obj, original_metadata,
+                     metadata: pm.emit_signal('on_metadata_changed',
+                                              original_metadata, metadata))
 
     def create_ui(self):
         self.menu = gtk.Menu()
@@ -268,7 +270,7 @@ class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
         if function_name == 'on_experiment_log_changed':
             # Ensure that the app's reference to the new experiment log gets
             # set.
-            return [ScheduleRequest('microdrop.app', self.name)]
+            return [pm.ScheduleRequest('microdrop.app', self.name)]
         else:
             return []
 
@@ -279,4 +281,4 @@ class MetadataPlugin(Plugin, gobject.GObject, AppDataController):
         return json.loads(self.get_app_values()['json_schema'])
 
 
-PluginGlobals.pop_env()
+pm.PluginGlobals.pop_env()
