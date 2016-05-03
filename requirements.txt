@@ -1,3 +1,1 @@
-barcode-scanner>=0.2.post13
-pygst-utils>=0.3.post7
-wheeler.pygtkhelpers>=0.12.post22
+barcode-scanner>=0.2.post15
