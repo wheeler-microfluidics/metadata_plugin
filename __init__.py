@@ -152,10 +152,9 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
                                  device_name=device_name, max_width=max_width,
                                  max_fps=max_fps, title='Edit metadata',
                                  parent=app.main_window_controller.view)
-        except ValueError:
-            pass
-        except KeyError:
-            pass
+        except (KeyError, ValueError):
+            logger.error('Error setting metadata scanner video config.',
+                         exc_info=True)
         else:
             self.set_metadata(data)
 
