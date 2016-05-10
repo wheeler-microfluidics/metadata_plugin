@@ -1,2 +1,2 @@
-barcode-scanner>=0.2.post15
+barcode-scanner>=0.2.post16
 microdrop>=2.0.post49.dev258705497
