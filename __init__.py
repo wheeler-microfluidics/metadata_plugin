@@ -76,7 +76,8 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
         self.metadata_menu = None
         self.connect('metadata-changed', lambda obj, original_metadata,
                      metadata: pm.emit_signal('on_metadata_changed',
-                                              args=[original_metadata,
+                                              args=[obj.schema,
+                                                    original_metadata,
                                                     metadata]))
 
     def create_ui(self):
@@ -210,7 +211,7 @@ class MetadataPlugin(pm.Plugin, gobject.GObject, AppDataController):
     def on_metadata_menu__activate(self, widget):
         self.edit_metadata()
 
-    def on_metadata_changed(self, original_metadata, metadata):
+    def on_metadata_changed(self, schema, original_metadata, metadata):
         '''
         Update metadata label in GUI when metadata is changed.
         '''
