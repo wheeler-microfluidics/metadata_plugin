@@ -19,6 +19,7 @@ requirements:
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
+    - opencv-python
     - pandas
     - pillow
     - pygst_utils
@@ -35,6 +36,7 @@ requirements:
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
+    - opencv-python
     - pandas
     - pillow
     - pygst_utils
