@@ -1,0 +1,2 @@
+ - Create Conda builder recipe for opencv-python
+ - Create Conda builder recipe for barcode-scanner
