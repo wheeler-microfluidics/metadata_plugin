@@ -13,38 +13,30 @@ package:
 
 requirements:
   build:
+    - barcode-scanner
     - flatland-fork
     - jsonschema
-    - matplotlib
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
-    - opencv-python
     - pandas
-    - pillow
-    - pygst_utils
     - pyyaml
     - path_helpers >=0.2.post4
     - redirect-io
     - wheeler.pygtkhelpers
-    - zbar
 
   run:
+    - barcode-scanner
     - flatland-fork
     - jsonschema
-    - matplotlib
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
-    - opencv-python
     - pandas
-    - pillow
-    - pygst_utils
     - pyyaml
     - path_helpers >=0.2.post4
     - redirect-io
     - wheeler.pygtkhelpers
-    - zbar
 
 about:
   home: http://github.com/wheeler-microfluidics/metadata-plugin
