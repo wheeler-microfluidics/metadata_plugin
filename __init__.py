@@ -31,6 +31,10 @@ import gtk
 import jsonschema
 import microdrop.plugin_manager as pm
 
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
+
 pm.PluginGlobals.push_env('microdrop.managed')
 
 logger = logging.getLogger(__name__)

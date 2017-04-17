@@ -4,12 +4,16 @@ source:
   git_url: ../
 
 package:
-  name: metadata-plugin-requirements
+  name: metadata_plugin
 {% if GIT_DESCRIBE_NUMBER > '0' %}
   version: {{ GIT_DESCRIBE_TAG[1:] }}.post{{ GIT_DESCRIBE_NUMBER }}
 {% else %}
   version: {{ GIT_DESCRIBE_TAG[1:] }}
 {% endif %}
+
+build:
+  number: 0
+  script: python -m mpm.bin.build
 
 requirements:
   build:
@@ -19,6 +23,7 @@ requirements:
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
+    - microdrop-plugin-manager >=0.10
     - pandas
     - pyyaml
     - path_helpers >=0.2.post4
@@ -32,6 +37,7 @@ requirements:
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
+    - microdrop-plugin-manager >=0.10
     - pandas
     - pyyaml
     - path_helpers >=0.2.post4
