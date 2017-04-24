@@ -23,7 +23,7 @@ requirements:
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
-    - microdrop-plugin-manager >=0.10
+    - microdrop-plugin-manager >=0.11
     - pandas
     - pyyaml
     - path_helpers >=0.2.post4
@@ -37,12 +37,16 @@ requirements:
     - microdrop-plugin-template
     - microdrop-utility
     - microdrop >=2.0.post49.dev258705497
-    - microdrop-plugin-manager >=0.10
+    - microdrop-plugin-manager >=0.11
     - pandas
     - pyyaml
     - path_helpers >=0.2.post4
     - redirect-io
     - wheeler.pygtkhelpers
+
+test:
+  commands:
+    - python -c "import importlib; import mpm.api; import os; import sys; sys.path.insert(0, mpm.api.MICRODROP_CONDA_SHARE.joinpath('plugins', 'available')); importlib.import_module(os.environ.get('PKG_NAME'))"
 
 about:
   home: http://github.com/wheeler-microfluidics/metadata-plugin
